@@ -1,16 +1,20 @@
-import urllib3
+import argparse
 
-http = urllib3.PoolManager(
-    # ... other connection parameters
-    cert_reqs='CERT_NONE'  # Disable certificate verification
-)
+# Create the parser
+parser = argparse.ArgumentParser()
 
-# Making the request (The request function returns HTTPResponse object)
-resp = http.request("GET", "https://hackthissite.org/missions/")
+# Add arguments
+parser.add_argument("name", type=str, help="Your name")
+parser.add_argument("age", type=int, nargs="?", help="Your age")
+parser.add_argument("-m", "--is-main-character", action="store_true", help="The person is the main character")
 
-print(resp.status)
-# 200
-print(resp.data)
-# b"{\n  "origin": "104.232.115.37"\n}\n"
-print(resp.headers)
-# HTTPHeaderDict({"Content-Length": "32", ...})
+# Parse the arguments
+args = parser.parse_args()
+
+# Use the parsed arguments
+if args.age is not None:
+    print(f"Now that you are {args.age}, I can reveal your true nature")
+print(f"You're a hazard {args.name}")
+
+if args.is_main_character:
+    print("Also, here's a pile of cash")

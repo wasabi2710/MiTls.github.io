@@ -1,11 +1,15 @@
 import urllib3
+import argparse
+
+parser = argparse.ArgumentParser(description="Simple URL fuzzer")
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 http = urllib3.PoolManager(
-    # ... other connection parameters
     cert_reqs='CERT_NONE' # Disable certificate verification
 )
 
-site = "https://hackthissite.org/"
+parser.add_argument("-u", type=str, help="URL")
+args = parser.parse_args()
+site = args.u
 
 word_list = open("words.txt", "r")
 with word_list as word_list:
@@ -14,7 +18,7 @@ with word_list as word_list:
         word = line.strip()
         saved_site = f"{site}{word}"
         print(saved_site)
-        max_retries = 3 # Define maximum number of retries
+        max_retries = 3
         for attempt in range(max_retries + 1):
             try:
                 response = http.request("GET", saved_site, timeout=5)
